@@ -45,7 +45,7 @@ def get_file_by_id(file_id):
 # ------------------ MAIN APP ------------------
 def main():
     st.set_page_config(page_title="File Upload and Admin Viewer", layout="wide")
-    st.title("📂 File Upload and Admin Page (SQLite3)")
+    st.title("📂 File Upload and Admin Page")
 
     menu = ["User Upload", "Admin Page","Main Admin"]
     choice = st.sidebar.selectbox("Navigation", menu)
@@ -74,7 +74,7 @@ def main():
 
     # ---------- ADMIN PAGE ----------
     elif choice == "Admin Page":
-        st.header("👨‍💻 Admin: View Uploaded Files")
+        st.header("👨‍💻 Admin: View Mode")
 
         files = get_all_files()
         if files:
