@@ -56,7 +56,14 @@ def main():
 
         uploaded_file = st.file_uploader(
             "Upload a Word, PDF, or Python file", 
-            type=["docx", "pdf", "py"]
+            type=[
+        "docx", "doc", "pdf", "txt",
+        "py", "java", "cpp", "c", "html", "css", "js",
+        "jpg", "jpeg", "png", "gif",
+        "xlsx", "xls", "csv",
+        "pptx", "ppt",
+        "zip", "rar"
+    ]
         )
 
         if uploaded_file is not None:
