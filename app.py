@@ -160,7 +160,7 @@ def main():
             st.image(
                 "vimal.gif",
                 caption="Access Denied 🚫",
-                use_column_width=True
+                 width=500
             )
 
 # ------------------ RUN APP ------------------
