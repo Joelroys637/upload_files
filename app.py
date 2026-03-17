@@ -104,35 +104,37 @@ def main():
                                 file_name=fname,
                                 mime=ftype
                             )
-    elif choice=="Main Admin":
-        use=st.text_input("Enter a User Name:")
-        pas=st.text_input("Enter a password:")
-        if use=="leo" and pas=="123":
-            file_path="print.docx"
-            if file_path:
-                if os.path.exists(file_path):
-                    st.success(f"✅ File found: {os.path.basename(file_path)}")
+    elif choice == "Main Admin":
+     use = st.text_input("Enter a User Name:")
+     pas = st.text_input("Enter a password:", type="password")
 
-                    with open(file_path, "rb") as f:
-                        file_data = f.read()
+     if use == "leo" and pas == "123":
 
-                    st.download_button(
-                        label="⬇️ Download File",
-                        data=file_data,
-                        file_name=os.path.basename(file_path),
-                        mime="application/octet-stream"
-                    )
-                else:
-                    st.error("❌ File not found! Please check the path.")
-            else:
-                st.info("Enter a valid file path above to enable download.")
-        else:
-            st.info("User name and password is worng pls contact simon...")
+         file_path = "print.docx"
 
-    else:
-        st.info("No files uploaded yet.")
+         if os.path.exists(file_path):
+             st.success(f"✅ File found: {os.path.basename(file_path)}")
 
-# ------------------ RUN APP ------------------
-if __name__ == "__main__":
-    init_db()
-    main()
+            # 🔘 Button to open file
+             if st.button("📂 Open File"):
+                 with open(file_path, "rb") as f:
+                     file_data = f.read()
+
+                 st.download_button(
+                     label="⬇️ Click here to Open / Download",
+                     data=file_data,
+                     file_name=os.path.basename(file_path),
+                     mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+                 )
+
+         else:
+             st.error("❌ File not found! Please check the path.")
+
+     else:
+         st.info("User name and password is wrong pls contact simon...")
+
+ else:
+     st.info("No files uploaded yet.")
+     else:
+         st.info("No files uploaded yet.")
+
