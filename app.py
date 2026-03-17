@@ -44,9 +44,9 @@ def get_file_by_id(file_id):
 
 # ------------------ MAIN APP ------------------
 def main():
-    init_db()  # ✅ Ensure DB is created
+    init_db()
 
-    st.set_page_config(page_title="File Upload and Admin Viewer", layout="wide")
+    st.set_page_config(page_title="File Upload & Admin Panel", layout="wide")
     st.title("📂 File Upload and Admin Page")
 
     menu = ["User Upload", "Admin Page", "Main Admin"]
@@ -75,14 +75,14 @@ def main():
                 "filetype": uploaded_file.type
             })
 
-            if st.button("Save to Database"):
+            if st.button("💾 Save to Database"):
                 data = uploaded_file.getvalue()
                 save_file_to_db(uploaded_file.name, uploaded_file.type, data)
-                st.success(f"✅ {uploaded_file.name} saved!")
+                st.success(f"✅ {uploaded_file.name} saved successfully!")
 
     # ---------- ADMIN PAGE ----------
     elif choice == "Admin Page":
-        st.header("👨‍💻 Admin: View Mode")
+        st.header("👨‍💻 Admin: View Files")
 
         files = get_all_files()
 
@@ -109,21 +109,36 @@ def main():
         else:
             st.info("No files uploaded yet.")
 
-    # ---------- MAIN ADMIN ----------
+    # ---------- MAIN ADMIN LOGIN ----------
     elif choice == "Main Admin":
         st.header("🔐 Main Admin Login")
 
+        # Session state
+        if "logged_in" not in st.session_state:
+            st.session_state.logged_in = False
+            st.session_state.login_failed = False
+
+        # Login form
         use = st.text_input("Enter Username:")
         pas = st.text_input("Enter Password:", type="password")
 
-        if use == "leo" and pas == "123":
+        if st.button("🔑 Login"):
+            if use == "leo" and pas == "123":
+                st.session_state.logged_in = True
+                st.session_state.login_failed = False
+            else:
+                st.session_state.logged_in = False
+                st.session_state.login_failed = True
+
+        # After login success
+        if st.session_state.logged_in:
+            st.success("✅ Login Successful!")
 
             file_path = "print.docx"
 
             if os.path.exists(file_path):
-                st.success(f"✅ File found: {os.path.basename(file_path)}")
+                st.success(f"📄 File Ready: {os.path.basename(file_path)}")
 
-                # 🔘 Open button
                 if st.button("📂 Open File"):
                     with open(file_path, "rb") as f:
                         file_data = f.read()
@@ -137,8 +152,16 @@ def main():
             else:
                 st.error("❌ File not found!")
 
-        else:
-            st.info("⚠️ Wrong username or password")
+        # Login failed
+        elif st.session_state.login_failed:
+            st.error("❌ Wrong Username or Password!")
+
+            # GIF display
+            st.image(
+                "https://media.giphy.com/media/3o6ZtaO9BZHcOjmErm/giphy.gif",
+                caption="Access Denied 🚫",
+                use_column_width=True
+            )
 
 # ------------------ RUN APP ------------------
 if __name__ == "__main__":
