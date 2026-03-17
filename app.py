@@ -44,10 +44,12 @@ def get_file_by_id(file_id):
 
 # ------------------ MAIN APP ------------------
 def main():
+    init_db()  # ✅ Ensure DB is created
+
     st.set_page_config(page_title="File Upload and Admin Viewer", layout="wide")
     st.title("📂 File Upload and Admin Page")
 
-    menu = ["User Upload", "Admin Page","Main Admin"]
+    menu = ["User Upload", "Admin Page", "Main Admin"]
     choice = st.sidebar.selectbox("Navigation", menu)
 
     # ---------- USER UPLOAD ----------
@@ -55,40 +57,40 @@ def main():
         st.header("📤 Upload File")
 
         uploaded_file = st.file_uploader(
-            "Upload a Word, PDF, or Python file", 
+            "Upload a file",
             type=[
-        "docx", "doc", "pdf", "txt",
-        "py", "java", "cpp", "c", "html", "css", "js",
-        "jpg", "jpeg", "png", "gif",
-        "xlsx", "xls", "csv",
-        "pptx", "ppt",
-        "zip", "rar"
-    ]
+                "docx", "doc", "pdf", "txt",
+                "py", "java", "cpp", "c", "html", "css", "js",
+                "jpg", "jpeg", "png", "gif",
+                "xlsx", "xls", "csv",
+                "pptx", "ppt",
+                "zip", "rar"
+            ]
         )
 
         if uploaded_file is not None:
-            file_details = {
+            st.write("**File Details:**")
+            st.json({
                 "filename": uploaded_file.name,
                 "filetype": uploaded_file.type
-            }
-            st.write("**File Details:**")
-            st.json(file_details)
+            })
 
             if st.button("Save to Database"):
                 data = uploaded_file.getvalue()
                 save_file_to_db(uploaded_file.name, uploaded_file.type, data)
-                st.success(f"✅ {uploaded_file.name} successfully saved to database!")
+                st.success(f"✅ {uploaded_file.name} saved!")
 
     # ---------- ADMIN PAGE ----------
     elif choice == "Admin Page":
         st.header("👨‍💻 Admin: View Mode")
 
         files = get_all_files()
+
         if files:
-            st.write("### Files in Database:")
             for file in files:
                 file_id, filename, filetype = file
                 col1, col2, col3 = st.columns([3, 2, 1])
+
                 with col1:
                     st.write(f"📄 **{filename}**")
                 with col2:
@@ -104,37 +106,40 @@ def main():
                                 file_name=fname,
                                 mime=ftype
                             )
+        else:
+            st.info("No files uploaded yet.")
+
+    # ---------- MAIN ADMIN ----------
     elif choice == "Main Admin":
-     use = st.text_input("Enter a User Name:")
-     pas = st.text_input("Enter a password:", type="password")
+        st.header("🔐 Main Admin Login")
 
-     if use == "leo" and pas == "123":
+        use = st.text_input("Enter Username:")
+        pas = st.text_input("Enter Password:", type="password")
 
-         file_path = "print.docx"
+        if use == "leo" and pas == "123":
 
-         if os.path.exists(file_path):
-             st.success(f"✅ File found: {os.path.basename(file_path)}")
+            file_path = "print.docx"
 
-            # 🔘 Button to open file
-             if st.button("📂 Open File"):
-                 with open(file_path, "rb") as f:
-                     file_data = f.read()
+            if os.path.exists(file_path):
+                st.success(f"✅ File found: {os.path.basename(file_path)}")
 
-                 st.download_button(
-                     label="⬇️ Click here to Open / Download",
-                     data=file_data,
-                     file_name=os.path.basename(file_path),
-                     mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-                 )
+                # 🔘 Open button
+                if st.button("📂 Open File"):
+                    with open(file_path, "rb") as f:
+                        file_data = f.read()
 
-         else:
-             st.error("❌ File not found! Please check the path.")
+                    st.download_button(
+                        label="⬇️ Open / Download File",
+                        data=file_data,
+                        file_name=os.path.basename(file_path),
+                        mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+                    )
+            else:
+                st.error("❌ File not found!")
 
-     else:
-         st.info("User name and password is wrong pls contact simon...")
+        else:
+            st.info("⚠️ Wrong username or password")
 
-  else:
-      st.info("No files uploaded yet.")
-      else:
-          st.info("No files uploaded yet.")
-
+# ------------------ RUN APP ------------------
+if __name__ == "__main__":
+    main()
