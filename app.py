@@ -158,7 +158,7 @@ def main():
 
             # GIF display
             st.image(
-                "https://media.giphy.com/media/3o6ZtaO9BZHcOjmErm/giphy.gif",
+                "vimal.gif",
                 caption="Access Denied 🚫",
                 use_column_width=True
             )
